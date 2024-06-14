@@ -4,7 +4,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:note_reminder_getx/noti_page_test.dart';
 import 'package:note_reminder_getx/notification_controller.dart';
-import 'package:note_reminder_getx/services/awesome_noti_helper.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 void initializeAwesomeNotification() {
@@ -103,28 +102,61 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
+  late List<Appointment> _appointments;
+
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    super.initState();
+    _loadAppointments();
   }
 
-  void _test() {
-    // Fixed date and time: June 14, 2024, at 2:24 AM
+  void _loadAppointments() {
+    // Initialize appointments with some sample data
+    _appointments = [
+      Appointment(
+        startTime: DateTime(2024, 6, 14, 10, 0, 0),
+        endTime: DateTime(2024, 6, 14, 11, 0, 0),
+        subject: 'Meeting with Client',
+        color: Colors.blue,
+      ),
+      Appointment(
+        startTime: DateTime(2024, 6, 14, 14, 0, 0),
+        endTime: DateTime(2024, 6, 14, 15, 0, 0),
+        subject: 'Team Lunch',
+        color: Colors.green,
+      ),
+      Appointment(
+        startTime: DateTime(2024, 6, 14, 16, 0, 0),
+        endTime: DateTime(2024, 6, 14, 18, 0, 0),
+        subject: 'Design Review',
+        color: Colors.orange,
+      ),
+    ];
+  }
+
+  void _scheduleNotification() {
+    // Fixed date and time: June 14, 2024, at 2:24 PM
     int year = 2024;
     int month = 6;
     int day = 14;
     int hour = 14;
-    int minute = 48;
+    int minute = 24;
 
-    AwesomeNotificationHelper.scheduleNotificationWithDateTime(
-        "Hi",
-        "This is the first time awesome notification",
-        year,
-        month,
-        day,
-        hour,
-        minute,
-        summary: 'hello every one');
+    // Example of scheduling notification (replace with your logic)
+    // AwesomeNotificationHelper.scheduleNotificationWithDateTime(
+    //   "Hi",
+    //   "This is the first time awesome notification",
+    //   year,
+    //   month,
+    //   day,
+    //   hour,
+    //   minute,
+    //   summary: 'hello every one',
+    // );
+
+    // For demo purposes, just print a message
+    // ignore: avoid_print
+    print('Scheduled notification for $year-$month-$day at $hour:$minute');
   }
 
   @override
@@ -138,14 +170,15 @@ class _NotificationPageState extends State<NotificationPage> {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                _test();
+                _scheduleNotification();
               },
               child: const Text('Schedule Test Notification'),
             ),
           ),
           Expanded(
             child: SfCalendar(
-              view: CalendarView.month,
+              view: CalendarView.day,
+              dataSource: _getCalendarDataSource(),
               headerStyle: const CalendarHeaderStyle(
                 textAlign: TextAlign.center,
                 textStyle: TextStyle(
@@ -165,17 +198,17 @@ class _NotificationPageState extends State<NotificationPage> {
                   color: Colors.red,
                 ),
               ),
-              monthViewSettings: MonthViewSettings(
+              monthViewSettings: const MonthViewSettings(
                 appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
                 showAgenda: true,
                 agendaStyle: AgendaStyle(
-                  backgroundColor: Colors.grey.shade200,
-                  dayTextStyle: const TextStyle(
+                  backgroundColor: Colors.grey,
+                  dayTextStyle: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
-                  dateTextStyle: const TextStyle(
+                  dateTextStyle: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: Colors.black87,
@@ -193,5 +226,15 @@ class _NotificationPageState extends State<NotificationPage> {
         ],
       ),
     );
+  }
+
+  _getCalendarDataSource() {
+    return _DataSource(_appointments);
+  }
+}
+
+class _DataSource extends CalendarDataSource {
+  _DataSource(List<Appointment> appointments) {
+    this.appointments = appointments;
   }
 }
