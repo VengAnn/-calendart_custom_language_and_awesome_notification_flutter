@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
@@ -10,7 +9,8 @@ class AwesomeNotificationHelper {
     int notificationUniqueId = Random().nextInt(100);
     DateTime scheduledDate = DateTime(year, month, day, hour, minute);
 
-    log("year: $year month: $month - day: $day - hour: $hour - minute: $minute");
+    // ignore: avoid_print
+    print("year: $year month: $month - day: $day - hour: $hour - minute: $minute");
     AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: notificationUniqueId,
