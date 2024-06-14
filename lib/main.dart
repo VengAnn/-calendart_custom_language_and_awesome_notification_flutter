@@ -1,11 +1,13 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+import 'package:note_reminder_getx/noti_page_test.dart';
+import 'package:note_reminder_getx/notification_controller.dart';
 import 'package:note_reminder_getx/services/awesome_noti_helper.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-// ignore: non_constant_identifier_names
-void InitializeAwesomeNotification() {
+void initializeAwesomeNotification() {
   AwesomeNotifications().initialize(
     null, // Use the default app icon
     [
@@ -24,19 +26,40 @@ void InitializeAwesomeNotification() {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  InitializeAwesomeNotification();
+  initializeAwesomeNotification();
   runApp(const MyApp());
+
+  AwesomeNotifications().setListeners(
+    onActionReceivedMethod: NotificationController.onActionReceivedMethod,
+    onNotificationCreatedMethod:
+        NotificationController.onNotificationCreatedMethod,
+    onNotificationDisplayedMethod:
+        NotificationController.onNotificationDisplayedMethod,
+    onDismissActionReceivedMethod:
+        NotificationController.onDismissActionReceivedMethod,
+  );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+  static const String name = 'Awesome Notifications - Example App';
+  static const Color mainColor = Colors.deepPurple;
+
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return GetMaterialApp(
+      navigatorKey: MyApp.navigatorKey,
       //locale: Locale('vi', ''), // Set default locale to Vietnamese
-      locale: Locale('km', ''), // Khmer
-      localizationsDelegates: [
+      locale: const Locale('km', ''), // Khmer
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -44,12 +67,29 @@ class MyApp extends StatelessWidget {
             .delegate, // Remove any unnecessary delegates
         // Additional delegates can be added here if needed
       ],
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en', ''), // English
         Locale('vi', ''), // Vietnamese
         Locale('km', ''), // Khmer
       ],
-      home: NotificationPage(),
+      initialRoute: '/',
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return MaterialPageRoute(
+                builder: (context) => const NotificationPage());
+          case '/notification-page':
+            final Map<String, String> args =
+                settings.arguments as Map<String, String>;
+            return MaterialPageRoute(
+                builder: (context) =>
+                    NotiPageTest(title: args['title']!, body: args['body']!));
+          default:
+            return MaterialPageRoute(
+                builder: (context) => const NotificationPage());
+        }
+      },
+      home: const NotificationPage(), // Replace with your initial page
     );
   }
 }
@@ -69,12 +109,12 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void _test() {
-    // Fixed date and time: June 12, 2024, at 2:24 AM
+    // Fixed date and time: June 14, 2024, at 2:24 AM
     int year = 2024;
     int month = 6;
-    int day = 12;
-    int hour = 20;
-    int minute = 12;
+    int day = 14;
+    int hour = 14;
+    int minute = 48;
 
     AwesomeNotificationHelper.scheduleNotificationWithDateTime(
         "Hi",

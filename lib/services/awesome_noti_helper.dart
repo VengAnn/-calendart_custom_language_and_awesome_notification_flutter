@@ -5,7 +5,6 @@ class AwesomeNotificationHelper {
   // Method to schedule a notification at a specific date and time
   static void scheduleNotificationWithDateTime(String title, String body,
       int year, int month, int day, int hour, int minute, {String? summary}) {
-        
     int notificationUniqueId = Random().nextInt(100);
     DateTime scheduledDate = DateTime(year, month, day, hour, minute);
 
@@ -16,11 +15,19 @@ class AwesomeNotificationHelper {
         title: title,
         body: body,
         summary: summary, // Adding summary to the notification content
+        payload: {'title': title, 'body': body}, // Adding payload here
       ),
       schedule: NotificationCalendar.fromDate(
         date: scheduledDate,
         allowWhileIdle: true,
       ),
+      actionButtons: [
+        NotificationActionButton(
+          key: 'VIEW',
+          label: 'View Details',
+          autoDismissible: true,
+        ),
+      ],
     );
   }
 
@@ -35,7 +42,15 @@ class AwesomeNotificationHelper {
         title: title,
         body: body,
         summary: summary, // Adding summary to the notification content
+        payload: {'title': title, 'body': body}, // Adding payload here
       ),
+      actionButtons: [
+        NotificationActionButton(
+          key: 'VIEW',
+          label: 'View Details',
+          autoDismissible: true,
+        ),
+      ],
     );
   }
 
@@ -50,6 +65,7 @@ class AwesomeNotificationHelper {
         title: title,
         body: body,
         summary: summary, // Adding summary to the notification content
+        payload: {'title': title, 'body': body}, // Adding payload here
       ),
       schedule: NotificationCalendar(
         hour: hour,
@@ -59,6 +75,13 @@ class AwesomeNotificationHelper {
         repeats: true,
         allowWhileIdle: true,
       ),
+      actionButtons: [
+        NotificationActionButton(
+          key: 'VIEW',
+          label: 'View Details',
+          autoDismissible: true,
+        ),
+      ],
     );
   }
 }
