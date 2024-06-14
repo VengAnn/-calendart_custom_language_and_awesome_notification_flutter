@@ -1,13 +1,15 @@
-import 'dart:math';
+import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
 class AwesomeNotificationHelper {
   // Method to schedule a notification at a specific date and time
   static void scheduleNotificationWithDateTime(String title, String body,
-      int year, int month, int day, int hour, int minute, {String? summary}) {
+      int year, int month, int day, int hour, int minute,
+      {String? summary}) {
     int notificationUniqueId = Random().nextInt(100);
     DateTime scheduledDate = DateTime(year, month, day, hour, minute);
 
+    log("year: $year month: $month - day: $day - hour: $hour - minute: $minute");
     AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: notificationUniqueId,
@@ -32,7 +34,8 @@ class AwesomeNotificationHelper {
   }
 
   // Method to show a simple notification immediately
-  static void showSimpleNotification(String title, String body, {String? summary}) {
+  static void showSimpleNotification(String title, String body,
+      {String? summary}) {
     int notificationUniqueId = Random().nextInt(100);
 
     AwesomeNotifications().createNotification(
@@ -55,7 +58,9 @@ class AwesomeNotificationHelper {
   }
 
   // Method to schedule a daily notification at a specific time
-  static void scheduleDailyNotification(String title, String body, int hour, int minute, {String? summary}) {
+  static void scheduleDailyNotification(
+      String title, String body, int hour, int minute,
+      {String? summary}) {
     int notificationUniqueId = Random().nextInt(100);
 
     AwesomeNotifications().createNotification(
